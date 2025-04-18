@@ -95,3 +95,18 @@ def protect_page(title, reason, expiry="3 days", edit_protection="autoconfirmed"
 
 def unprotect_page(title, reason):
     return protect_page(title, reason, edit_protection="all", move_protection="all")
+
+def block_user(target, expiry, reason, autoblock=False, anononly=False):
+    CSRF_TOKEN = fetch_CSRF_token()
+    PARAMS = {
+        "action": "block",
+        "user": target,
+        "autoblock":autoblock,
+        "anononly":anononly,
+        "expiry": expiry,
+        "reason": reason,
+        "token": CSRF_TOKEN,
+        "format": "json"
+    }
+    RESPONSE = SESSION.post(url=URL, data=PARAMS, headers=HEADERS)
+    return RESPONSE.json()
